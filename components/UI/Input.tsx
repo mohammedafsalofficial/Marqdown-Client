@@ -5,11 +5,14 @@ import { useState } from "react";
 
 type InputProps = {
   label: string;
+  name: string;
   type: string;
   placeholder: string;
+  error?: string;
+  disabled?: boolean;
 };
 
-export default function Input({ label, type, placeholder }: InputProps) {
+export default function Input({ label, name, type, placeholder, error, disabled = false }: InputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
@@ -41,13 +44,23 @@ export default function Input({ label, type, placeholder }: InputProps) {
         )}
 
         <div className="absolute left-8 md:left-10 top-1/2 -translate-y-1/2 h-4 w-px bg-gray-300"></div>
+
         <input
-          className="w-full border border-gray-300 outline-none pl-10 md:pl-12 pr-4 py-2 rounded-md text-sm md:text-base"
-          id={label}
+          className={`w-full border ${
+            error ? "border-red-300" : "border-gray-300"
+          } outline-none pl-10 md:pl-12 pr-4 py-2 rounded-md text-sm md:text-base ${
+            disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""
+          }`}
+          id={name}
+          name={name}
           type={inputType}
           placeholder={placeholder}
+          disabled={disabled}
+          aria-invalid={error ? "true" : "false"}
         />
       </div>
+
+      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>
   );
 }
