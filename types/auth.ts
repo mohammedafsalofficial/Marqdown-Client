@@ -1,4 +1,4 @@
-export type SignupData = {
+export type SignupFormData = {
   fullName: string;
   email: string;
   password: string;
@@ -6,7 +6,12 @@ export type SignupData = {
   acceptedTerms: string;
 };
 
-export type SignupResponse = {
+export type LoginFormData = {
+  email: string;
+  password: string;
+};
+
+export type AuthResponse = {
   success: boolean;
   message: string;
   user?: {

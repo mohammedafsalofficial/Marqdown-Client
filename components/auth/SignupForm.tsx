@@ -26,7 +26,7 @@ export default function SignupForm() {
     redirectUrl: undefined,
     metadata: undefined,
   });
-
+  
   useEffect(() => {
     if (state.success) {
       state.message && toast.success(state.message);

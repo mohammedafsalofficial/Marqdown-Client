@@ -1,12 +1,12 @@
 "use server";
 
-import { SignupData, SignupResponse } from "@/types/auth";
+import { SignupFormData, AuthResponse, LoginFormData } from "@/types/auth";
 import { axiosPublic } from "@/utils/axiosInstance";
 
-export async function signupAction(prevState: SignupResponse, formData: FormData): Promise<SignupResponse> {
-  const signupData = Object.fromEntries(formData.entries()) as SignupData;
+export async function signupAction(prevState: AuthResponse, formData: FormData): Promise<AuthResponse> {
+  const signupPayload = Object.fromEntries(formData.entries()) as SignupFormData;
 
-  if (signupData.password !== signupData.confirmPassword) {
+  if (signupPayload.password !== signupPayload.confirmPassword) {
     return {
       ...prevState,
       success: false,
@@ -17,10 +17,10 @@ export async function signupAction(prevState: SignupResponse, formData: FormData
           message: "Passwords do not match",
         },
       ],
-    };  
+    };
   }
 
-  if (signupData.acceptedTerms !== "on") {
+  if (signupPayload.acceptedTerms !== "on") {
     return {
       ...prevState,
       success: false,
@@ -35,9 +35,22 @@ export async function signupAction(prevState: SignupResponse, formData: FormData
   }
 
   try {
-    const response = await axiosPublic.post<SignupResponse>("/auth/register", signupData);
+    const response = await axiosPublic.post<AuthResponse>("/auth/register", signupPayload);
     return response.data;
   } catch (error: any) {
-    return error.response.data as SignupResponse;
+    return error.response.data as AuthResponse;
+  }
+}
+
+export async function loginAction(prevState: AuthResponse, formData: FormData): Promise<AuthResponse> {
+  const loginPayload = Object.fromEntries(formData.entries()) as LoginFormData;
+
+  try {
+    const response = await axiosPublic.post<AuthResponse>("/auth/login", loginPayload);
+    console.log("Success", response);
+    return response.data;
+  } catch (error: any) {
+    console.log("Error:", error.response.data);
+    return error.response.data as AuthResponse;
   }
 }

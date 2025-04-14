@@ -1,17 +1,83 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
 import Input from "../UI/Input";
+import Image from "next/image";
 import googleLogo from "@/public/icons8-google.svg";
 import facebookLogo from "@/public/icons8-facebook.svg";
 import appleLogo from "@/public/icons8-apple.svg";
+import { useActionState, useEffect } from "react";
+import { loginAction } from "@/actions/auth";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import "react-toastify/ReactToastify.css";
 
 export default function LoginForm() {
+  const router = useRouter();
+  const [state, formAction, isPending] = useActionState(loginAction, {
+    success: false,
+    message: "",
+    user: undefined,
+    errors: undefined,
+    token: undefined,
+    redirectUrl: undefined,
+    metadata: undefined,
+  });
+
+  useEffect(() => {
+    if (state.success) {
+      state.message && toast.success(state.message);
+      state.token && Cookies.set("token", state.token);
+
+      if (state.redirectUrl) {
+        setTimeout(() => router.push(state.redirectUrl as string), 2000);
+      }
+    } else {
+      state.message && toast.error(state.message);
+
+      if (state.errors) {
+        toast.error(state.errors.find((error) => error.field === "general")?.message);
+      }
+    }
+  }, [state]);
+
+  function getFieldError(fieldName: string) {
+    return state.errors?.find((error) => error.field === fieldName)?.message;
+  }
+
+  const handleSocialAuth = (provider: string) => {
+    toast.info(`${provider} authentication coming soon!`);
+  };
+
   return (
-    <form className="flex flex-col items-center justify-center w-full lg:w-1/2 h-full px-4">
+    <form action={formAction} className="flex flex-col items-center justify-center w-full lg:w-1/2 h-full px-4">
       <div className="bg-white p-4 md:p-8 space-y-4 md:space-y-5 w-full max-w-[500px]">
         <h1 className="font-bold text-2xl md:text-4xl mb-4 md:mb-10 text-center text-rose-700">Login</h1>
-        <Input label="Email" name="email" type="email" placeholder="Enter Email" />
-        <Input label="Password" name="password" type="password" placeholder="Enter Password" />
+
+        {getFieldError("general") && (
+          <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-md text-sm">
+            {getFieldError("general")}
+          </div>
+        )}
+
+        <Input
+          label="Email"
+          name="email"
+          type="email"
+          placeholder="Enter Email"
+          error={getFieldError("email")}
+          disabled={isPending}
+        />
+        <Input
+          label="Password"
+          name="password"
+          type="password"
+          placeholder="Enter Password"
+          error={getFieldError("password")}
+          disabled={isPending}
+        />
         <div>
           <Link href={"/forgot-password"} className="flex justify-end">
             <span className="text-rose-500 text-sm md:text-base relative group">
@@ -20,8 +86,19 @@ export default function LoginForm() {
             </span>
           </Link>
 
-          <button className="w-full text-center bg-rose-400 hover:bg-[#f86377] transition-colors duration-300 text-white mt-3 py-2 rounded-md text-sm md:text-base">
-            Log in
+          <button
+            type="submit"
+            disabled={isPending}
+            className="w-full text-center bg-rose-400 hover:bg-[#f86377] transition-colors duration-300 text-white mt-3 py-2 rounded-md text-sm md:text-base flex items-center justify-center"
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="animate-spin mr-2" />
+                Logging in...
+              </>
+            ) : (
+              "Log in"
+            )}
           </button>
 
           <div className="text-center mt-4 text-sm text-gray-600">
@@ -41,13 +118,31 @@ export default function LoginForm() {
           </div>
 
           <div className="flex justify-center gap-2 md:gap-4">
-            <button className="p-2 md:p-3 rounded-full border border-gray-300 hover:bg-gray-50 transition-colors">
+            <button
+              type="button"
+              disabled={isPending}
+              className={`p-2 md:p-3 rounded-full border border-gray-300 ${
+                isPending ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"
+              } transition-colors`}
+            >
               <Image src={googleLogo} alt="Google Logo" height={20} width={20} />
             </button>
-            <button className="p-2 md:p-3 rounded-full border border-gray-300 hover:bg-gray-50 transition-colors">
+            <button
+              type="button"
+              disabled={isPending}
+              className={`p-2 md:p-3 rounded-full border border-gray-300 ${
+                isPending ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"
+              } transition-colors`}
+            >
               <Image src={facebookLogo} alt="Facebook Logo" height={20} width={20} />
             </button>
-            <button className="p-2 md:p-3 rounded-full border border-gray-300 hover:bg-gray-50 transition-colors">
+            <button
+              type="button"
+              disabled={isPending}
+              className={`p-2 md:p-3 rounded-full border border-gray-300 ${
+                isPending ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"
+              } transition-colors`}
+            >
               <Image src={appleLogo} alt="Apple Logo" height={20} width={20} />
             </button>
           </div>
