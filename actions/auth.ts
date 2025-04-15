@@ -2,6 +2,7 @@
 
 import { SignupFormData, AuthResponse, LoginFormData } from "@/types/auth";
 import { axiosPublic } from "@/utils/axiosInstance";
+import { cookies } from "next/headers";
 
 export async function signupAction(prevState: AuthResponse, formData: FormData): Promise<AuthResponse> {
   const signupPayload = Object.fromEntries(formData.entries()) as SignupFormData;
@@ -44,13 +45,29 @@ export async function signupAction(prevState: AuthResponse, formData: FormData):
 
 export async function loginAction(prevState: AuthResponse, formData: FormData): Promise<AuthResponse> {
   const loginPayload = Object.fromEntries(formData.entries()) as LoginFormData;
+  const cookieStore = await cookies();
+
+  cookieStore.set({
+    name: "authToken",
+    value: "My Auth Token",
+    httpOnly: true,
+    path: "/",
+  });
 
   try {
     const response = await axiosPublic.post<AuthResponse>("/auth/login", loginPayload);
-    console.log("Success", response);
+
+    if (response.data.token) {
+      cookieStore.set({
+        name: "authToken",
+        value: response.data.token,
+        httpOnly: true,
+        path: "/",
+      });
+    }
+
     return response.data;
   } catch (error: any) {
-    console.log("Error:", error.response.data);
     return error.response.data as AuthResponse;
   }
 }

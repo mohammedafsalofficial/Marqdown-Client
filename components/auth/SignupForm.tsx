@@ -2,17 +2,13 @@
 
 import Link from "next/link";
 import Input from "../UI/Input";
-import Image from "next/image";
-import googleLogo from "@/public/icons8-google.svg";
-import facebookLogo from "@/public/icons8-facebook.svg";
-import appleLogo from "@/public/icons8-apple.svg";
 import { useActionState, useEffect } from "react";
 import { signupAction } from "@/actions/auth";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import "react-toastify/ReactToastify.css";
+import OAuth from "./OAuth";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -26,11 +22,10 @@ export default function SignupForm() {
     redirectUrl: undefined,
     metadata: undefined,
   });
-  
+
   useEffect(() => {
     if (state.success) {
       state.message && toast.success(state.message);
-      state.token && Cookies.set("token", state.token);
 
       if (state.redirectUrl) {
         setTimeout(() => router.push(state.redirectUrl as string), 2000);
@@ -141,35 +136,7 @@ export default function SignupForm() {
             <div className="flex-grow h-px bg-gray-300"></div>
           </div>
 
-          <div className="flex justify-center gap-2 md:gap-4">
-            <button
-              type="button"
-              disabled={isPending}
-              className={`p-2 md:p-3 rounded-full border border-gray-300 ${
-                isPending ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"
-              } transition-colors`}
-            >
-              <Image src={googleLogo} alt="Google Logo" height={20} width={20} />
-            </button>
-            <button
-              type="button"
-              disabled={isPending}
-              className={`p-2 md:p-3 rounded-full border border-gray-300 ${
-                isPending ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"
-              } transition-colors`}
-            >
-              <Image src={facebookLogo} alt="Facebook Logo" height={20} width={20} />
-            </button>
-            <button
-              type="button"
-              disabled={isPending}
-              className={`p-2 md:p-3 rounded-full border border-gray-300 ${
-                isPending ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"
-              } transition-colors`}
-            >
-              <Image src={appleLogo} alt="Apple Logo" height={20} width={20} />
-            </button>
-          </div>
+          <OAuth isDisable={isPending} />
         </div>
       </div>
     </form>
