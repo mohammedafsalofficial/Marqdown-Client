@@ -71,3 +71,8 @@ export async function loginAction(prevState: AuthResponse, formData: FormData): 
     return error.response.data as AuthResponse;
   }
 }
+
+export async function clearAuthErrorCookie() {
+  const cookieStore = await cookies();
+  cookieStore.delete("authError");
+}

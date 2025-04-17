@@ -27,7 +27,7 @@ export default function LoginForm() {
       state.message && toast.success(state.message);
 
       if (state.redirectUrl) {
-        setTimeout(() => router.push(state.redirectUrl as string), 2000);
+        setTimeout(() => router.push(state.redirectUrl as string), 1000);
       }
     } else {
       state.message && toast.error(state.message);

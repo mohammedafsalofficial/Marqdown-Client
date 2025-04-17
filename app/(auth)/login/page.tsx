@@ -2,7 +2,7 @@ import Image from "next/image";
 import AppLogo from "@/components/svg/AppLogo";
 import LoginForm from "@/components/auth/LoginForm";
 
-export default function Login() {
+export default async function Login() {
   return (
     <section className="flex flex-col lg:flex-row items-center justify-center min-h-screen">
       <div className="hidden md:block relative w-full lg:w-1/2 h-[50vh] lg:h-[95vh] m-0 lg:m-5">
