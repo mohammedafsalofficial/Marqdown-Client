@@ -3,6 +3,7 @@
 import { SignupFormData, AuthResponse, LoginFormData } from "@/types/auth";
 import { axiosPublic } from "@/utils/axiosInstance";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function signupAction(prevState: AuthResponse, formData: FormData): Promise<AuthResponse> {
   const signupPayload = Object.fromEntries(formData.entries()) as SignupFormData;
@@ -70,6 +71,12 @@ export async function loginAction(prevState: AuthResponse, formData: FormData): 
   } catch (error: any) {
     return error.response.data as AuthResponse;
   }
+}
+
+export async function logoutAction() {
+  const cookieStore = await cookies();
+  cookieStore.delete("authToken");
+  redirect("/login");
 }
 
 export async function clearAuthErrorCookie() {
