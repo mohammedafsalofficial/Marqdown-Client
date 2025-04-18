@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function signupAction(prevState: AuthResponse, formData: FormData): Promise<AuthResponse> {
+  const cookieStore = await cookies();
   const signupPayload = Object.fromEntries(formData.entries()) as SignupFormData;
 
   if (signupPayload.password !== signupPayload.confirmPassword) {
@@ -38,6 +39,16 @@ export async function signupAction(prevState: AuthResponse, formData: FormData):
 
   try {
     const response = await axiosPublic.post<AuthResponse>("/auth/register", signupPayload);
+
+    if (response.data.token) {
+      cookieStore.set({
+        name: "authToken",
+        value: response.data.token,
+        httpOnly: true,
+        path: "/",
+      });
+    }
+
     return response.data;
   } catch (error: any) {
     return error.response.data as AuthResponse;
