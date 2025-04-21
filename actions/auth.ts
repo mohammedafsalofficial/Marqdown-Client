@@ -1,7 +1,7 @@
 "use server";
 
 import { SignupFormData, AuthResponse, LoginFormData } from "@/types/auth";
-import { axiosPublic } from "@/utils/axiosInstance";
+import { axiosInstance } from "@/utils/axiosInstance";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -38,7 +38,7 @@ export async function signupAction(prevState: AuthResponse, formData: FormData):
   }
 
   try {
-    const response = await axiosPublic.post<AuthResponse>("/auth/register", signupPayload);
+    const response = await axiosInstance.post<AuthResponse>("/auth/register", signupPayload);
 
     if (response.data.token) {
       cookieStore.set({
@@ -67,7 +67,7 @@ export async function loginAction(prevState: AuthResponse, formData: FormData): 
   });
 
   try {
-    const response = await axiosPublic.post<AuthResponse>("/auth/login", loginPayload);
+    const response = await axiosInstance.post<AuthResponse>("/auth/login", loginPayload);
 
     if (response.data.token) {
       cookieStore.set({

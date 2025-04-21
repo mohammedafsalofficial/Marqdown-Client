@@ -28,7 +28,7 @@ export default function SignupForm() {
       state.message && toast.success(state.message);
 
       if (state.redirectUrl) {
-        setTimeout(() => router.push(state.redirectUrl as string), 1000);
+        router.push(state.redirectUrl);
       }
     } else {
       state.message && toast.error(state.message);
