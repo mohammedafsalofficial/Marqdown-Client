@@ -1,12 +1,12 @@
 "use client";
 
 import { logoutAction } from "@/actions/auth";
-import { Archive, SquarePen, Trash2, LogOut, Tag, Bookmark, Star, Plus } from "lucide-react";
+import { Archive, Home, Trash2, LogOut, Tag, Bookmark, Star, Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 const menuItems = [
-  { icon: <SquarePen size={18} />, label: "Create note" },
+  { icon: <Home size={18} />, label: "Home" },
   { icon: <Archive size={18} />, label: "Archive" },
   { icon: <Trash2 size={18} />, label: "Trash" },
 ];
