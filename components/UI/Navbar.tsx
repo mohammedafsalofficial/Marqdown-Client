@@ -1,7 +1,8 @@
 import type { UserData } from "@/types/user";
 import { axiosInstance } from "@/utils/axiosInstance";
+import { delay } from "@/utils/misc";
 import { getInitials } from "@/utils/userUtils";
-import { Bell, Search, Settings, User } from "lucide-react";
+import { Bell, Settings } from "lucide-react";
 import { cookies } from "next/headers";
 
 export default async function Navbar() {
@@ -16,16 +17,7 @@ export default async function Navbar() {
 
   return (
     <nav className="h-16 px-6 md:px-10 flex items-center justify-between bg-white shadow-sm">
-      <div className="hidden md:flex items-center relative w-64 lg:w-80">
-        <div className="absolute left-3 text-gray-400">
-          <Search size={18} />
-        </div>
-        <input
-          type="text"
-          placeholder="Search notes..."
-          className="w-full py-2 pl-10 pr-3 rounded-lg bg-gray-50 border border-gray-200 focus:outline-none focus:ring-1 focus:ring-rose-200 focus:border-rose-400 text-sm"
-        />
-      </div>
+      <p className="text-sm italic text-gray-500">"You don’t have to write a lot — just start."</p>
 
       <div className="flex items-center space-x-4">
         <button className="relative p-2 rounded-full hover:bg-gray-100 transition-colors">

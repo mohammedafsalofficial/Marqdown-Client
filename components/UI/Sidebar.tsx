@@ -1,9 +1,11 @@
-import { Archive, Home, Trash2, Tag, Bookmark, Star, Plus } from "lucide-react";
+import { Archive, Home, Trash2, Tag, Bookmark, Star, Plus, Clock, Notebook } from "lucide-react";
 import Link from "next/link";
 import SignoutButton from "./SignoutButton";
 
 const menuItems = [
   { icon: <Home size={18} />, label: "Home", href: "/" },
+  { icon: <Notebook size={18} />, label: "All Notes", href: "/notes" },
+  { icon: <Clock size={18} />, label: "Recent", href: "/recent" },
   { icon: <Archive size={18} />, label: "Archive", href: "/archive" },
   { icon: <Trash2 size={18} />, label: "Trash", href: "/trash" },
 ];

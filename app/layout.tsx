@@ -32,6 +32,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
+
         <ToastErrorHandler errorMessage={authError?.value} />
         <ToastContainer
           position="top-right"
